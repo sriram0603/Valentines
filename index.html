@@ -293,17 +293,65 @@
     background: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
   }
 
+  .scene3-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: var(--bg);
+    transition: opacity 0.5s ease;
+    z-index: 3;
+  }
+  #scene3.loaded .scene3-loading {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .scene3-loading-text {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--rose);
+    margin-bottom: 12px;
+  }
+  .scene3-loading-bar {
+    width: 100%;
+    max-width: 280px;
+    height: 8px;
+    background: rgba(139, 34, 82, 0.15);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .scene3-loading-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--pink), var(--rose));
+    border-radius: 999px;
+    transition: width 0.15s linear;
+  }
+
+  .scene3-content {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    width: 100%;
+    max-width: 420px;
+  }
+  #scene3.loaded .scene3-content {
+    opacity: 1;
+  }
+
   .scene3-teaser {
     background: white;
     border-radius: 20px;
-    padding: 36px 40px;
-    max-width: 400px;
+    padding: 32px 36px 28px;
+    max-width: 420px;
     width: 100%;
     box-shadow: 0 20px 50px rgba(139, 34, 82, 0.12), 0 0 0 1px rgba(232, 54, 93, 0.08);
     position: relative;
     overflow: hidden;
-    opacity: 0;
-    animation: fadeInUp 0.7s ease 0.2s forwards;
+    animation: fadeInUp 0.6s ease forwards;
   }
   .scene3-teaser::before {
     content: '';
@@ -312,38 +360,34 @@
     height: 5px;
     background: linear-gradient(90deg, var(--pink), var(--gold), var(--pink));
   }
-  .scene3-badge {
-    display: inline-block;
+  .scene3-content-warning {
     font-family: 'Quicksand', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--pink);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--rose);
+    text-align: center;
+    margin-bottom: 20px;
     text-transform: uppercase;
-    margin-bottom: 14px;
-    opacity: 0;
-    animation: fadeInUp 0.5s ease 0.5s forwards;
+    text-shadow: 0 0 20px rgba(232, 54, 93, 0.3);
   }
   .scene3-teaser-title {
     font-family: 'Caveat', cursive;
-    font-size: 28px;
+    font-size: 26px;
     color: var(--rose);
     line-height: 1.35;
-    margin-bottom: 20px;
-    opacity: 0;
-    animation: fadeInUp 0.5s ease 0.4s forwards;
+    margin-bottom: 16px;
   }
   .scene3-teaser-list {
     list-style: none;
     font-family: 'Quicksand', sans-serif;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--text);
-    line-height: 2;
-    opacity: 0;
-    animation: fadeInUp 0.5s ease 0.6s forwards;
+    line-height: 1.85;
+    margin-bottom: 16px;
   }
   .scene3-teaser-list li {
-    padding-left: 24px;
+    padding-left: 22px;
     position: relative;
   }
   .scene3-teaser-list li::before {
@@ -353,14 +397,27 @@
     color: var(--pink);
     font-weight: 700;
   }
+  .scene3-rotate-emoji {
+    display: inline-block;
+    width: 1.2em;
+    text-align: center;
+  }
+  .scene3-terms {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 10px;
+    color: var(--gold);
+    text-align: center;
+    line-height: 1.4;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(212, 165, 116, 0.4);
+  }
   .scene3-subtext {
     font-family: 'Quicksand', sans-serif;
     font-size: 18px;
     color: var(--pink);
-    margin-top: 32px;
+    margin-top: 28px;
     font-weight: 600;
-    opacity: 0;
-    animation: fadeInUp 1s ease 0.8s forwards;
   }
 
   /* ===== SCENE 4: THE QUESTION ===== */
@@ -621,18 +678,31 @@
 
 <!-- ===== SCENE 3: TEASER ===== -->
 <div class="scene hidden" id="scene3">
-  <div class="scene3-teaser">
-    <div class="scene3-badge">Spoiler alert 🎬</div>
-    <div class="scene3-teaser-title">Next screen contains:</div>
-    <ul class="scene3-teaser-list">
-      <li>One (1) question</li>
-      <li>Flowers</li>
-      <li>Your favorite food</li>
-      <li>You saying yes (probably 😏)</li>
-    </ul>
+  <div class="scene3-loading">
+    <div class="scene3-loading-text" id="scene3LoadingText">Loading romance... 0%</div>
+    <div class="scene3-loading-bar">
+      <div class="scene3-loading-fill" id="scene3LoadingFill"></div>
+    </div>
   </div>
-  <div class="scene3-subtext">One more question, then we celebrate ✨</div>
-  <button class="continue-btn visible" style="margin-top:28px;" onclick="goToScene(4)">Show me 👀</button>
+  <div class="scene3-content">
+    <div class="scene3-teaser">
+      <div class="scene3-content-warning">⚠️ CONTENT WARNING ⚠️</div>
+      <div class="scene3-teaser-title">Next screen contains:</div>
+      <ul class="scene3-teaser-list">
+        <li>One (1) very important question</li>
+        <li>A suspicious amount of heart emojis</li>
+        <li>Zero escape routes (sorry not sorry)</li>
+        <li>Flowers (the real ones, not emoji ones... okay maybe both 💐)</li>
+        <li>Your favorite food (because love = feeding you forever)</li>
+        <li>You saying yes (this is non-negotiable <span class="scene3-rotate-emoji" id="scene3RotateEmoji">😏</span>)</li>
+        <li>Unlimited premium boyfriend-turned-fiancé love ♾️</li>
+        <li>A "No" button that has commitment issues</li>
+      </ul>
+      <div class="scene3-terms">By proceeding, you agree to unlimited cuddles, sharing fries, and being loved forever. No refunds.</div>
+    </div>
+    <div class="scene3-subtext">One more question, then we celebrate ✨</div>
+    <button class="continue-btn visible" style="margin-top:28px;" onclick="goToScene(4)">Show me 👀</button>
+  </div>
 </div>
 
 <!-- ===== SCENE 4: THE QUESTION ===== -->
@@ -654,7 +724,7 @@
   <div class="celebration-note">
     From the boy who proposed at Carmel,<br>
     to the girl who made him the luckiest man alive.<br><br>
-    Here's to our first Valentine's<br>
+    Here's to our Second Valentine's<br>
     as future Mr. &amp; Mrs. 💕<br><br>
     <span style="font-size:0.85em; font-family:'Quicksand',sans-serif; color:var(--gold);">
       — April 2026, here we come —
@@ -728,7 +798,47 @@
     setTabTitle(num);
 
     if (num === 2) startLoveNote();
+    if (num === 3) startScene3();
     if (num === 4) initScene4();
+  }
+
+  // ===== SCENE 3: LOADING BAR + ROTATING EMOJI =====
+  var scene3EmojiInterval;
+  function startScene3() {
+    const scene = document.getElementById('scene3');
+    const loadingText = document.getElementById('scene3LoadingText');
+    const loadingFill = document.getElementById('scene3LoadingFill');
+    const emojiEl = document.getElementById('scene3RotateEmoji');
+    if (!scene || !loadingText || !loadingFill) return;
+
+    scene.classList.remove('loaded');
+    loadingText.textContent = 'Loading romance... 0%';
+    loadingFill.style.width = '0%';
+
+    let pct = 0;
+    const loadingInterval = setInterval(function () {
+      pct += Math.random() * 12 + 4;
+      if (pct >= 99) {
+        pct = 99;
+        clearInterval(loadingInterval);
+        loadingText.textContent = 'Loading romance... 99%';
+        loadingFill.style.width = '99%';
+        setTimeout(function () {
+          scene.classList.add('loaded');
+          if (emojiEl) {
+            const emojis = ['😏', '🤔', '😤', '😌'];
+            let i = 0;
+            scene3EmojiInterval = setInterval(function () {
+              emojiEl.textContent = emojis[i % emojis.length];
+              i++;
+            }, 600);
+          }
+        }, 200);
+      } else {
+        loadingText.textContent = 'Loading romance... ' + Math.round(pct) + '%';
+        loadingFill.style.width = pct + '%';
+      }
+    }, 120);
   }
 
   // ===== SCENE 2: TYPEWRITER =====
@@ -794,7 +904,7 @@
     yesBtn.style.cssText = '';
     document.body.classList.remove('going-gray');
 
-    makeRunaway();  // start in runaway mode so cursor approach moves it right away
+    // No button starts beside Yes; runaway class added when cursor first approaches
 
     noBtn.removeEventListener('click', handleNoClick);
     noBtn.removeEventListener('touchstart', handleNoTouch);
@@ -831,6 +941,7 @@
     const dist = Math.hypot(dx, dy);
     if (dist < 120) {
       lastRunaway = now;
+      noBtn.classList.add('runaway');  // switch to fixed so we can move it
       moveToRandom();
     }
   }
@@ -904,6 +1015,7 @@
   }
 
   function moveToRandom() {
+    noBtn.classList.add('runaway');
     const maxX = window.innerWidth - 150;
     const maxY = window.innerHeight - 60;
     const x = 40 + Math.random() * (maxX - 40);

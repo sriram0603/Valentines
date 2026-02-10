@@ -207,6 +207,27 @@
     font-weight: 500;
   }
 
+  .open-letter-btn {
+    margin-top: 14px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--pink), var(--rose));
+    color: #fff;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(232, 54, 93, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    opacity: 0;
+    animation: fadeInUp 1s ease 1s forwards;
+  }
+  .open-letter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(232, 54, 93, 0.35);
+  }
+
   /* ===== SCENE 2: LOVE NOTE ===== */
   #scene2 {
     background: radial-gradient(ellipse at 50% 30%, var(--warm-white) 0%, var(--bg) 60%);
@@ -625,7 +646,7 @@
 <!-- ===== SCENE 1: ENVELOPE ===== -->
 <div class="scene" id="scene1">
   <div class="scene1-text">You have a letter... 💌</div>
-  <div class="envelope-wrapper" id="envelopeWrapper" onclick="openEnvelope()">
+  <div class="envelope-wrapper" id="envelopeWrapper" onclick="openEnvelope()" role="button" tabindex="0" aria-label="Open letter">
     <div class="envelope">
       <div class="letter-peek">
         <span>For you, my love...</span>
@@ -635,7 +656,8 @@
       <div class="wax-seal">💕</div>
     </div>
   </div>
-  <div class="scene1-hint">tap to open</div>
+  <div class="scene1-hint">tap the envelope or button to open</div>
+  <button class="open-letter-btn" id="openLetterBtn" type="button" onclick="openEnvelope()">Open Letter 💌</button>
 </div>
 
 <!-- ===== SCENE 2: LOVE NOTE ===== -->
@@ -732,11 +754,25 @@
   }
 
   // ===== SCENE TRANSITIONS =====
+  const envelopeWrapper = document.getElementById('envelopeWrapper');
+  if (envelopeWrapper) {
+    envelopeWrapper.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openEnvelope();
+      }
+    });
+    envelopeWrapper.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      openEnvelope();
+    }, { passive: false });
+  }
+
   function openEnvelope() {
     const wrapper = document.getElementById('envelopeWrapper');
     if (wrapper.classList.contains('opening')) return;
     wrapper.classList.add('opening');
-    setTimeout(() => goToScene(2), 950);
+    setTimeout(() => goToScene(2), 850);
   }
 
   function goToScene(num) {

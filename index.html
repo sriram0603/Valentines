@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Letter For You 💌</title>
+<title>Ram + Chetana | For You 💌</title>
+<meta name="description" content="A playful, heartfelt Valentine's surprise for Chetana.">
+<meta name="theme-color" content="#E8365D">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='14' width='64' height='64' fill='%23E8365D'/%3E%3Ctext x='50%25' y='57%25' text-anchor='middle' font-size='20' font-family='Arial' fill='white'%3ER%2BC%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -238,7 +241,7 @@
     margin-bottom: 4px;
   }
   .note-line.visible {
-    animation: typeIn 0.6s ease forwards;
+    animation: typeIn 0.28s ease forwards;
   }
   .note-line.dear {
     font-size: 30px;
@@ -660,7 +663,7 @@
     <div class="polaroid-caption">The day everything changed</div>
   </div>
   <div class="scene3-text">
-    I already asked you the <em>biggest question</em> of my life at Garrapatta...<br>
+    I already asked you the <em>biggest question</em> of my life at Carmel...<br>
     and you said <em>YES!</em> 🥹
   </div>
   <div class="scene3-subtext">But now I need to ask you something almost as important...</div>
@@ -698,6 +701,18 @@
 </div>
 
 <script>
+  const TAB_TITLES = {
+    1: '💌 A Letter',
+    2: '📝 Dear Chetana',
+    3: '🥹 Remember This?',
+    4: '💕 Big Question',
+    5: '🎉 She Said Yes!'
+  };
+
+  function setTabTitle(sceneNumber) {
+    document.title = TAB_TITLES[sceneNumber] || 'Ram + Chetana | For You 💌';
+  }
+
   // ===== FLOATING HEARTS =====
   const heartsBg = document.getElementById('heartsBg');
   const heartEmojis = ['💕', '💗', '💖', '♥', '💘', '💝', '✨'];
@@ -717,14 +732,15 @@
     const wrapper = document.getElementById('envelopeWrapper');
     if (wrapper.classList.contains('opening')) return;
     wrapper.classList.add('opening');
-    setTimeout(() => goToScene(2), 1400);
+    setTimeout(() => goToScene(2), 950);
   }
 
   function goToScene(num) {
     document.querySelectorAll('.scene').forEach(s => s.classList.add('hidden'));
     const target = document.getElementById('scene' + num);
     target.classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    setTabTitle(num);
 
     if (num === 2) startLoveNote();
     if (num === 4) initScene4();
@@ -734,10 +750,16 @@
   function startLoveNote() {
     const lines = document.querySelectorAll('#scene2 .note-line');
     const btn = document.querySelector('#scene2 .continue-btn');
+    lines.forEach(line => line.classList.remove('visible'));
+    btn.classList.remove('visible');
+    const baseDelay = 40;
+    const stagger = 75;
     lines.forEach((line, i) => {
-      setTimeout(() => line.classList.add('visible'), 300 + i * 500);
+      setTimeout(() => line.classList.add('visible'), baseDelay + i * stagger);
     });
-    setTimeout(() => btn.classList.add('visible'), 300 + lines.length * 500 + 400);
+    setTimeout(() => {
+      btn.classList.add('visible');
+    }, baseDelay + lines.length * stagger + 90);
   }
 
   // ===== SCENE 4: THE IMPOSSIBLE NO =====
@@ -787,6 +809,9 @@
     yesBtn.style.cssText = '';
     document.body.classList.remove('going-gray');
 
+    noBtn.removeEventListener('click', handleNoClick);
+    noBtn.removeEventListener('touchstart', handleNoTouch);
+    document.removeEventListener('mousemove', handleMouseApproach);
     noBtn.addEventListener('click', handleNoClick);
     noBtn.addEventListener('touchstart', handleNoTouch, { passive: false });
     document.addEventListener('mousemove', handleMouseApproach);

@@ -88,6 +88,8 @@
     position: relative;
     cursor: pointer;
     transition: transform 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
   .envelope-wrapper:hover { transform: scale(1.05); }
 
@@ -205,27 +207,6 @@
     opacity: 0;
     animation: fadeInUp 1s ease 0.8s forwards;
     font-weight: 500;
-  }
-
-  .open-letter-btn {
-    margin-top: 14px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--pink), var(--rose));
-    color: #fff;
-    font-family: 'Quicksand', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 8px 22px rgba(232, 54, 93, 0.28);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    opacity: 0;
-    animation: fadeInUp 1s ease 1s forwards;
-  }
-  .open-letter-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 26px rgba(232, 54, 93, 0.35);
   }
 
   /* ===== SCENE 2: LOVE NOTE ===== */
@@ -646,7 +627,7 @@
 <!-- ===== SCENE 1: ENVELOPE ===== -->
 <div class="scene" id="scene1">
   <div class="scene1-text">You have a letter... 💌</div>
-  <div class="envelope-wrapper" id="envelopeWrapper" onclick="openEnvelope()" role="button" tabindex="0" aria-label="Open letter">
+  <div class="envelope-wrapper" id="envelopeWrapper" role="button" tabindex="0" aria-label="Open letter">
     <div class="envelope">
       <div class="letter-peek">
         <span>For you, my love...</span>
@@ -656,8 +637,7 @@
       <div class="wax-seal">💕</div>
     </div>
   </div>
-  <div class="scene1-hint">tap the envelope or button to open</div>
-  <button class="open-letter-btn" id="openLetterBtn" type="button" onclick="openEnvelope()">Open Letter 💌</button>
+  <div class="scene1-hint">tap to open</div>
 </div>
 
 <!-- ===== SCENE 2: LOVE NOTE ===== -->
@@ -754,19 +734,27 @@
   }
 
   // ===== SCENE TRANSITIONS =====
-  const envelopeWrapper = document.getElementById('envelopeWrapper');
-  if (envelopeWrapper) {
-    envelopeWrapper.addEventListener('keydown', (e) => {
+  (function () {
+    const wrapper = document.getElementById('envelopeWrapper');
+    if (!wrapper) return;
+    var opened = false;
+    function openOnce() {
+      if (opened) return;
+      opened = true;
+      openEnvelope();
+    }
+    wrapper.addEventListener('click', openOnce);
+    wrapper.addEventListener('touchend', function (e) {
+      e.preventDefault();
+      openOnce();
+    }, { passive: false });
+    wrapper.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openEnvelope();
+        openOnce();
       }
     });
-    envelopeWrapper.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      openEnvelope();
-    }, { passive: false });
-  }
+  })();
 
   function openEnvelope() {
     const wrapper = document.getElementById('envelopeWrapper');
